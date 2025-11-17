@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Signals in the Dark - World Map</title>
+    <link rel="stylesheet" href="css/style.css">
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+</head>
+<body>
+    <div id="starfield"></div>
+    
+    <header>
+        <div class="logo">Signals in the Dark</div>
+        <div class="team-name">🐸 Graphical Hoppers 🐸</div>
+        <nav>
+            <ul>
+                <li><a href="index.html" class="nav-link">Home</a></li>
+                <li><a href="world-map.html" class="nav-link active">World Map</a></li>
+                <li><a href="trends.html" class="nav-link">Yearly Trends</a></li>
+                <li><a href="shapes.html" class="nav-link">UFO Shapes</a></li>
+                <li><a href="exoplanets.html" class="nav-link">Exoplanets</a></li>
+                <li><a href="comparison.html" class="nav-link">Science vs Perception</a></li>
+                <li><a href="conclusion.html" class="nav-link">Conclusion</a></li>
+            </ul>
+        </nav>
+    </header>
+    
+    <main>
+        <section id="world-map" class="page active">
+            <h1>Where the Sky Lights Up: Global UFO Sightings</h1>
+            <div class="card">
+                <p>This map grounds the abstract idea of UFOs in geographical reality, showing where sightings have been reported worldwide.</p>
+            </div>
+            
+            <div class="visualization-container">
+                <div class="visualization-placeholder">
+                    Vega-Lite World Map Visualization<br>
+                    Points = UFO sightings with lat/long<br>
+                    Color = by year<br>
+                    Tooltip = city, shape, date
+                </div>
+            </div>
+            
+            <div class="card">
+                <h3>Insight</h3>
+                <p>"Most reports come from the United States, not because UFOs prefer it, but because of reporting access, cultural influence, and technology. Still, sightings appear worldwide - in cities, deserts, and coastlines."</p>
+                
+                <h3>Why This Visualization Belongs Here</h3>
+                <p>"Where?" is the first natural question when exploring UFO phenomena. This map provides spatial grounding before moving into temporal trends, establishing a foundation for understanding the data.</p>
+            </div>
+        </section>
+    </main>
+    
+    <footer>
+        <p>Signals in the Dark &copy; 2025 Graphical Hoppers: Cohen ter Heide, Danelly Joseph, Riya Daiya</p>
+    </footer>
+
+    <script src="js/starfield.js"></script>
+    <script src="js/navigation.js"></script>
+</body>
+</html>
