@@ -44,7 +44,7 @@ function worldmapCreateDropdown(data) {
     });
 }
 
-// RENDER MAP - EXACT ORIGINAL CODE, just renamed function
+// RENDER MAP
 async function worldmapRenderMap(allData) {
     const selected = document.getElementById("worldmap-decadeSelect").value;
 
@@ -60,6 +60,7 @@ async function worldmapRenderMap(allData) {
     const spec = {
         width: 900,
         height: 520,
+        background: "transparent",
 
         projection: {
             type: "mercator",
@@ -69,24 +70,28 @@ async function worldmapRenderMap(allData) {
         },
 
         layer: [
-            // --- MAP BACKGROUND ---
+            //MAP BACKGROUND
             {
                 data: {
                     values: topojson.feature(world, world.objects.countries).features
                 },
                 mark: {
                     type: "geoshape",
-                    fill: "#1e2a47",
-                    stroke: "#999"
+                    fill: "#0a1429",
+                    stroke: "#4a6fcc",
+                    strokeWidth: 1.2
                 }
             },
 
-            // --- UFO POINTS ---
+            //UFO POINTS
             {
                 data: { values: filteredData },
                 mark: {
                     type: "circle",
-                    opacity: 0.9
+                    opacity: 0.85,
+                    stroke: "#50E3C2",
+                    strokeWidth: 1.5,
+                    strokeOpacity: 0.8
                 },
                 encoding: {
                     longitude: { field: "longitude ", type: "quantitative" },
@@ -95,26 +100,83 @@ async function worldmapRenderMap(allData) {
                     color: {
                         field: "year",
                         type: "quantitative",
-                        scale: { scheme: "yellowgreenblue" }
+                        scale: { 
+                            scheme: "viridis",
+                            domain: [1940, 2020]
+                        },
+                        legend: {
+                            title: "Sighting Year",
+                            titleColor: "#8ab4ff",
+                            labelColor: "#b0c4ff",
+                            orient: "bottom-right",
+                            titleFontSize: 14,
+                            labelFontSize: 11,
+                            gradientLength: 300,
+                            gradientThickness: 20,
+                            titlePadding: 10,
+                            offset: 10
+                        }
                     },
 
-                    size: { value: 70 },
+                    size: { 
+                        value: 75 
+                    },
 
                     tooltip: [
                         { field: "city",     title: "City" },
                         { field: "shape",    title: "Shape" },
                         { field: "datetime", title: "Date/Time" },
-                        { field: "year",     title: "Year" }
+                        { field: "year",     title: "Year" },
+                        { field: "country",  title: "Country" }
                     ]
                 }
             }
-        ]
+        ],
+        
+        config: {
+            background: "transparent",
+            view: {
+                stroke: "transparent"
+            },
+            axis: {
+                domainColor: "#6a9eff",
+                gridColor: "rgba(106, 158, 255, 0.3)",
+                tickColor: "#6a9eff",
+                labelColor: "#b0c4ff",
+                titleColor: "#8ab4ff"
+            },
+            legend: {
+                labelColor: "#b0c4ff",
+                titleColor: "#8ab4ff",
+                titleFontSize: 14,
+                labelFontSize: 11,
+                gradientLength: 300,
+                gradientThickness: 20,
+                orient: "bottom-right",
+                direction: "horizontal",
+                titlePadding: 10
+            },
+            range: {
+                category: ["#50E3C2", "#6a9eff", "#9eff6a", "#ff6b6b", "#ffa726"]
+            }
+        }
     };
 
-    vegaEmbed("#worldmap-view", spec, { actions: false });
+    vegaEmbed("#worldmap-view", spec, { 
+        actions: {
+            export: false,
+            source: false,
+            compiled: false,
+            editor: false
+        },
+        theme: "dark"
+    }).then(result => {
+        console.log("Map rendered successfully with legend");
+    }).catch(error => {
+        console.error("Error rendering map:", error);
+    });
 }
 
-// Wait for DOM to be fully loaded
 document.addEventListener('DOMContentLoaded', function() {
     worldmapLoadData();
 });

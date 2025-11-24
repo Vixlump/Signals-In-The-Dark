@@ -322,32 +322,65 @@ footer {
 .worldmap-container {
     width: 100%;
     height: 520px;
-    background-color: #1e2a47;
+    background: transparent;
     margin-bottom: 20px;
-    border-radius: 8px;
+    border-radius: 12px;
     overflow: hidden;
+    border: 1px solid rgba(100, 100, 255, 0.3);
+    box-shadow: 0 0 20px rgba(106, 158, 255, 0.2);
+    position: relative;
+}
+
+#worldmap-view,
+#worldmap-view > div,
+#worldmap-view canvas {
+    background: transparent !important;
+}
+
+.worldmap-visualization-container {
+    background: rgba(10, 20, 40, 0.8);
+    border: 1px solid rgba(80, 227, 194, 0.3);
+    border-radius: 12px;
+    padding: 20px;
+    margin: 20px 0;
+    backdrop-filter: blur(10px);
+    position: relative;
 }
 
 .worldmap-controls {
-    margin-bottom: 15px;
+    margin-bottom: 20px;
     text-align: center;
-    padding: 10px;
+    padding: 15px;
+    background: rgba(20, 20, 40, 0.8);
+    border-radius: 8px;
+    border: 1px solid rgba(100, 100, 255, 0.2);
+    backdrop-filter: blur(10px);
 }
 
 .worldmap-dropdown {
-    padding: 8px 15px;
-    background-color: #2a3a5a;
-    color: white;
-    border: 1px solid #4a5a7a;
-    border-radius: 4px;
+    padding: 10px 20px;
+    background: rgba(30, 30, 60, 0.9);
+    color: #e0e0ff;
+    border: 1px solid rgba(106, 158, 255, 0.4);
+    border-radius: 6px;
     font-size: 14px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.worldmap-dropdown:hover {
+    border-color: rgba(80, 227, 194, 0.6);
+    box-shadow: 0 0 10px rgba(80, 227, 194, 0.3);
 }
 
 .worldmap-dropdown:focus {
     outline: none;
-    border-color: #6ab0f3;
+    border-color: #50E3C2;
+    box-shadow: 0 0 15px rgba(80, 227, 194, 0.5);
 }
 
-.worldmap-visualization-container {
-    margin: 20px 0;
+.worldmap-dropdown option {
+    background: rgba(30, 30, 60, 0.95);
+    color: #e0e0ff;
+    padding: 10px;
 }
