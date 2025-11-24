@@ -1,5 +1,5 @@
 // World Map Visualization - Unique naming to prevent conflicts
-const worldmapDataUrl = "dataset/scrubbed.csv";
+const worldmapDataUrl = "http://https://vixlump.github.io/Signals-In-The-Dark/dataset/scrubbed.csv";
 
 function worldmapGetDecade(year) {
     return Math.floor(year / 10) * 10;
