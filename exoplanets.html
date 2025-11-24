@@ -6,6 +6,9 @@
     <title>Signals in the Dark - Exoplanets</title>
     <link rel="stylesheet" href="css/style.css">
     <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega@5"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega-lite@5"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega-embed@6"></script>
 </head>
 <body>
     <div id="starfield"></div>
@@ -27,18 +30,14 @@
     </header>
     
     <main>
-        <section id="exoplanets" class="page active">
+        <section id="exoplanets-content" class="page active">
             <h1>Beyond Belief: The Rise of Scientific Discovery</h1>
             <div class="card">
                 <p>This section introduces the scientific counterpart to UFO sightings - the systematic discovery of exoplanets through rigorous methodology.</p>
             </div>
             
-            <div class="visualization-container">
-                <div class="visualization-placeholder">
-                    Vega-Lite Line Chart<br>
-                    Exoplanets discovered per year<br>
-                    Clean white/blue scientific palette<br>
-                    Highlighting key missions (Kepler, JWST)
+            <div class="exoplanets-visualization-container">
+                <div id="exoplanets-discovery-timeline" class="exoplanets-visualization">
                 </div>
             </div>
             
@@ -49,11 +48,16 @@
                 <h3>Methodology Matters</h3>
                 <p>"With missions like Kepler and JWST, we've confirmed thousands of distant worlds. Each data point represents not speculation, but evidence gathered through systematic observation and verification."</p>
                 
-                <div class="comparison-visualization">
-                    <div class="visualization-placeholder">
-                        Bar Chart: Discovery Methods<br>
-                        Transit, Radial Velocity, Imaging, etc.
+                <div class="exoplanets-comparison-visualization">
+                    <div id="exoplanets-discovery-methods" class="exoplanets-visualization">
                     </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>Interactive Exoplanet Explorer</h3>
+                <p>Explore the diversity of discovered exoplanets by size, temperature, and discovery method.</p>
+                <div id="exoplanets-interactive-explorer" class="exoplanets-visualization">
                 </div>
             </div>
         </section>
@@ -65,5 +69,6 @@
 
     <script src="js/starfield.js"></script>
     <script src="js/navigation.js"></script>
+    <script src="js/exoplanets-visualizations.js"></script>
 </body>
 </html>
