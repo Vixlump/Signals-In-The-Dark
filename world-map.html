@@ -6,6 +6,11 @@
     <title>Signals in the Dark - World Map</title>
     <link rel="stylesheet" href="css/style.css">
     <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega@5"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega-lite@5"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega-embed@6"></script>
+    <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
+    <script src="https://cdn.jsdelivr.net/npm/topojson@3"></script>
 </head>
 <body>
     <div id="starfield"></div>
@@ -34,11 +39,12 @@
             </div>
             
             <div class="visualization-container">
-                <div class="visualization-placeholder">
-                    Vega-Lite World Map Visualization<br>
-                    Points = UFO sightings with lat/long<br>
-                    Color = by year<br>
-                    Tooltip = city, shape, date
+                <div class="container">
+                    <!-- DROPDOWN -->
+                    <select id="decadeSelect"></select>
+
+                    <!-- VEGALITE WORLD MAP -->
+                    <div id="view"></div>
                 </div>
             </div>
             
@@ -58,5 +64,6 @@
 
     <script src="js/starfield.js"></script>
     <script src="js/navigation.js"></script>
+    <script type="module" src="worldmap.js"></script>
 </body>
 </html>
