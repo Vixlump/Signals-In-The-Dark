@@ -9,7 +9,6 @@
     <script src="https://cdn.jsdelivr.net/npm/vega@5"></script>
     <script src="https://cdn.jsdelivr.net/npm/vega-lite@5"></script>
     <script src="https://cdn.jsdelivr.net/npm/vega-embed@6"></script>
-    <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
     <script src="https://cdn.jsdelivr.net/npm/topojson@3"></script>
 </head>
 <body>
@@ -38,14 +37,14 @@
                 <p>This map grounds the abstract idea of UFOs in geographical reality, showing where sightings have been reported worldwide.</p>
             </div>
             
-            <div class="visualization-container">
-                <div class="container">
-                    <!-- DROPDOWN -->
-                    <select id="decadeSelect"></select>
-
-                    <!-- VEGALITE WORLD MAP -->
-                    <div id="view"></div>
+            <div class="worldmap-visualization-container">
+                <!-- World Map Controls -->
+                <div class="worldmap-controls">
+                    <select id="worldmap-decadeSelect" class="worldmap-dropdown"></select>
                 </div>
+                
+                <!-- World Map Visualization -->
+                <div id="worldmap-view" class="worldmap-container"></div>
             </div>
             
             <div class="card">
@@ -64,6 +63,6 @@
 
     <script src="js/starfield.js"></script>
     <script src="js/navigation.js"></script>
-    <script type="module" src="worldmap.js"></script>
+    <script type="module" src="js/worldmap.js"></script>
 </body>
 </html>
