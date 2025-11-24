@@ -44,7 +44,7 @@ function worldmapCreateDropdown(data) {
     });
 }
 
-// RENDER MAP - Using the original working spec
+// RENDER MAP - EXACT ORIGINAL CODE, just renamed function
 async function worldmapRenderMap(allData) {
     const selected = document.getElementById("worldmap-decadeSelect").value;
 
@@ -89,7 +89,7 @@ async function worldmapRenderMap(allData) {
                     opacity: 0.9
                 },
                 encoding: {
-                    longitude: { field: "longitude", type: "quantitative" },
+                    longitude: { field: "longitude ", type: "quantitative" },
                     latitude:  { field: "latitude",  type: "quantitative" },
 
                     color: {
