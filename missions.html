@@ -3,25 +3,75 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Signals in the Dark - UFO Shapes</title>
+    <title>Signals in the Dark - Space Missions</title>
     <link rel="stylesheet" href="css/style.css">
 
- <!-- External Dependencies for Visualization -->
+    <!-- External Dependencies for Visualization (Pure JS) -->
     <script src="https://d3js.org/d3.v7.min.js"></script>
-    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
-    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
-    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/vega@5"></script>
     <script src="https://cdn.jsdelivr.net/npm/vega-lite@5"></script>
     <script src="https://cdn.jsdelivr.net/npm/vega-embed@6"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
 
-
+    <style>
+        /* Styles needed for the JS-rendered controls and loading state, ensuring dark mode compatibility */
+        .viz-controls {
+            display: flex;
+            gap: 1.5rem;
+            align-items: center;
+            padding: 1rem;
+            background: rgba(20, 20, 40, 0.8);
+            border-radius: 8px;
+            border: 1px solid rgba(100, 100, 255, 0.2);
+            margin-bottom: 1.5rem;
+        }
+        .viz-controls label {
+            color: #b0c4ff;
+            font-size: 0.9rem;
+            margin-bottom: 0.4rem;
+            display: block;
+        }
+        .viz-controls input[type="file"],
+        .viz-controls select {
+            padding: 8px 12px;
+            background: rgba(30, 30, 60, 0.9);
+            color: #e0e0ff;
+            border: 1px solid rgba(106, 158, 255, 0.4);
+            border-radius: 4px;
+            font-size: 14px;
+            cursor: pointer;
+        }
+        .viz-controls select:focus,
+        .viz-controls input[type="file"]:focus {
+            outline: none;
+            border-color: #6a9eff;
+            box-shadow: 0 0 8px rgba(106, 158, 255, 0.5);
+        }
+        .file-input-wrapper {
+            flex-grow: 1;
+        }
+        .file-input-wrapper input[type="file"] {
+            width: 100%;
+        }
+        .viz-caption {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 0.5rem;
+            font-size: 0.85rem;
+            color: #8ab4ff;
+        }
+        /* CSS for the loading pulse animation used in js/space_missions_viz.js */
+        @keyframes pulse {
+            0% { opacity: 0.5; }
+            50% { opacity: 1.0; }
+            100% { opacity: 0.5; }
+        }
+    </style>
 </head>
 
 <body>
     <div id="starfield"></div>
-    
+
     <header>
         <div class="logo">Signals in the Dark</div>
         <div class="team-name">🐸 Graphical Hoppers 🐸</div>
@@ -30,39 +80,25 @@
                 <li><a href="index.html" class="nav-link">Home</a></li>
                 <li><a href="world-map.html" class="nav-link">World Map</a></li>
                 <li><a href="trends.html" class="nav-link">Yearly Trends</a></li>
-                <li><a href="shapes.html" class="nav-link active">UFO Shapes</a></li>
+                <li><a href="missions.html" class="nav-link active">Space Missions</a></li>
                 <li><a href="exoplanets.html" class="nav-link">Exoplanets</a></li>
                 <li><a href="comparison.html" class="nav-link">Science vs Perception</a></li>
                 <li><a href="conclusion.html" class="nav-link">Conclusion</a></li>
             </ul>
         </nav>
     </header>
-    
+
     <main>
         <section id="shapes" class="page active">
-            <h1>Our space missions so far</h1>
+            <h1>Humanity's space missions so far</h1>
             <div class="card">
                 <p>This visualization presents a detailed mission analysis, allowing you to track the activity volume and success rate of major space companies over time. Each bubble on the chart represents a company's total launches in a given year.</p>
             </div>
-            
-            <!-- Visualization container -->
-            <div class="visualization-container">
-                <!-- <div class="visualization-placeholder">
-                    Horizontal Bar Chart<br>
-                    UFO shapes sorted by frequency<br>
-                    "Light" category highlighted as most common
-                </div> -->
-                
+
+            <!-- Visualization container. The controls and chart are rendered inside viz-root by JS. -->
+            <div class="visualization-container" style="height: auto; min-height: 600px; padding: 1.5rem;">
                 <div id="viz-root" style="width: 100%; height: 100%;"></div>
             </div>
-            
-            <!-- <div class="card">
-                <h3>Human Perception Analysis</h3>
-                <p>"Most sightings describe a simple 'light' in the sky, often linked to drones, aircraft, or atmospheric events. More distinct shapes, like triangles or disks, appear less frequently but carry cultural weight in science fiction and folklore."</p>
-                
-                <h3>The Human Element</h3>
-                <p>This is where user perception becomes vivid and human. The prevalence of simple "light" descriptions suggests many sightings have mundane explanations, while the persistence of culturally significant shapes reveals how imagination influences perception.</p>
-            </div> -->
 
             <div class="card">
                 <h3>Mission Analysis Insights</h3>
@@ -75,199 +111,16 @@
                 </ul>
                 <p>Hover over any bubble to see the exact breakdown of successful and failed missions for that company and year.</p>
             </div>
-
-            <p> X axis and legend not showing up currently: WIP. Also it currently says top 15 countries in title when there's like 5.</p>
-
         </section>
     </main>
-    
+
     <footer>
         <p>Signals in the Dark &copy; 2025 Graphical Hoppers: Cohen ter Heide, Danelly Joseph, Riya Daiya</p>
     </footer>
 
-     <!-- React Visualization Logic -->
-    <script type="text/babel">
-        const { useState, useEffect, useMemo } = React;
-
-        // Sample data loaded from the embedded file (Space_Corrected.csv)
-        // This is a small sample to ensure the chart renders immediately.
-        const SAMPLE_DATA = `
-,Unnamed: 0,Company Name,Location,Datum,Detail,Status Rocket, Rocket,Status Mission
-0,0,SpaceX,"LC-39A, Kennedy Space Center, Florida, USA","Fri Aug 07, 2020 05:12 UTC",Falcon 9 Block 5 | Starlink V1 L9 & BlackSky,StatusActive,50.0 ,Success
-1,1,CASC,"Site 9401 (SLS-2), Jiuquan Satellite Launch Center, China","Thu Aug 06, 2020 04:01 UTC",Long March 2D | Gaofen-9 04 & Q-SAT,StatusActive,29.75 ,Success
-2,2,SpaceX,"Pad A, Boca Chica, Texas, USA","Tue Aug 04, 2020 23:57 UTC",Starship Prototype | 150 Meter Hop,StatusActive,,Success
-3,3,Roscosmos,"Site 200/39, Baikonur Cosmodrome, Kazakhstan","Thu Jul 30, 2020 21:25 UTC",Proton-M/Briz-M | Ekspress-80 & Ekspress-103,StatusActive,65.0 ,Success
-4,4,ULA,"SLC-41, Cape Canaveral AFS, Florida, USA","Thu Jul 30, 2020 11:50 UTC",Atlas V 541 | Perseverance,StatusActive,145.0 ,Success
-5,5,CASC,"LC-9, Taiyuan Satellite Launch Center, China","Sat Jul 25, 2020 03:13 UTC",Long March 4B | Ziyuan-3 03,StatusActive,64.68 ,Success
-6,6,Roscosmos,"Site 31/6, Baikonur Cosmodrome, Kazakhstan","Thu Jul 23, 2020 14:26 UTC",Soyuz 2.1a | Progress MS-15,StatusActive,48.5 ,Success
-100,100,NASA,"LC-39A, Kennedy Space Center, Florida, USA","Mon Nov 09, 1967 12:00 UTC",Saturn V | Apollo 4,StatusRetired,,Success
-101,101,NASA,"LC-39A, Kennedy Space Center, Florida, USA","Mon Nov 09, 1969 12:00 UTC",Saturn V | Apollo 11,StatusRetired,,Success
-102,102,RVSN USSR,"Site 1/5, Baikonur Cosmodrome, Kazakhstan","Fri May 15, 1958 07:12 UTC",Sputnik 8A91 | Sputnik-3 #2,StatusRetired,,Success
-103,103,US Navy,"LC-18A, Cape Canaveral AFS, Florida, USA","Mon Apr 28, 1958 02:53 UTC",Vanguard | Vanguard TV5,StatusRetired,,Failure
-104,104,RVSN USSR,"Site 1/5, Baikonur Cosmodrome, Kazakhstan","Sun Apr 27, 1958 09:01 UTC",Sputnik 8A91 | Sputnik-3 #1,StatusRetired,,Failure
-`;
-
-        const App = () => {
-            const [data, setData] = useState([]);
-            const [topN, setTopN] = useState(15);
-            const [loading, setLoading] = useState(false);
-
-            useEffect(() => {
-                parseCSV(SAMPLE_DATA);
-            }, []);
-
-            const parseCSV = (csvText) => {
-                Papa.parse(csvText, {
-                    header: true,
-                    skipEmptyLines: true,
-                    complete: (results) => {
-                        const processed = results.data.map(d => {
-                            const dateObj = new Date(d.Datum);
-                            return {
-                                ...d,
-                                Year: isNaN(dateObj) ? null : dateObj.getFullYear(),
-                                Company: d["Company Name"],
-                                IsSuccess: d["Status Mission"] === "Success" ? 1 : 0
-                            };
-                        }).filter(d => d.Year !== null && d.Company);
-                        setData(processed);
-                        setLoading(false);
-                    }
-                });
-            };
-
-            const handleFileUpload = (event) => {
-                const file = event.target.files[0];
-                if (file) {
-                    setLoading(true);
-                    const reader = new FileReader();
-                    reader.onload = (e) => parseCSV(e.target.result);
-                    reader.readAsText(file);
-                }
-            };
-
-            const chartData = useMemo(() => {
-                if (!data.length) return [];
-                const companyCounts = {};
-                data.forEach(d => {
-                    companyCounts[d.Company] = (companyCounts[d.Company] || 0) + 1;
-                });
-                const topCompanies = Object.entries(companyCounts)
-                    .sort((a, b) => b[1] - a[1])
-                    .slice(0, topN)
-                    .map(entry => entry[0]);
-
-                const aggMap = {};
-                data.forEach(d => {
-                    if (!topCompanies.includes(d.Company)) return;
-                    const key = `${d.Company}-${d.Year}`;
-                    if (!aggMap[key]) aggMap[key] = { Company: d.Company, Year: d.Year, Total: 0, Successes: 0, Failures: 0 };
-                    aggMap[key].Total += 1;
-                    if (d.IsSuccess) aggMap[key].Successes += 1; else aggMap[key].Failures += 1;
-                });
-
-                return Object.values(aggMap).map(item => ({
-                    ...item,
-                    SuccessRate: item.Successes / item.Total
-                }));
-            }, [data, topN]);
-
-            useEffect(() => {
-                if (chartData.length === 0) return;
-
-                const spec = {
-                    "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
-                    "data": { "values": chartData },
-                    "background": "transparent",
-                    "width": "container",
-                    "height": 500,
-                    // DARK MODE CONFIGURATION tailored for the provided CSS
-                    "config": {
-                        "font": "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
-                        "axis": { 
-                            "domainColor": "#b0c4ff", 
-                            "gridColor": "rgba(106, 158, 255, 0.2)", /* Light blue grid lines */
-                            "tickColor": "#b0c4ff", 
-                            "labelColor": "#e0e0ff", 
-                            "titleColor": "#6a9eff" 
-                        },
-                        "legend": { 
-                            "labelColor": "#e0e0ff", 
-                            "titleColor": "#6a9eff",
-                            "orient": "bottom",
-                            "direction": "horizontal",
-                            "titlePadding": 10
-                        },
-                        "title": { "color": "#6a9eff", "fontSize": 18, "fontWeight": 600, "anchor": "middle" },
-                        "view": { "stroke": "transparent" }
-                    },
-                    "title": `Mission Performance Timeline (Top ${topN} Companies)`,
-                    "mark": "circle",
-                    "encoding": {
-                        "x": {
-                            "field": "Year",
-                            "type": "quantitative",
-                            "scale": { "zero": false },
-                            "axis": { "format": "d", "tickMinStep": 1 },
-                            "title": "Year of Launch"
-                        },
-                        "y": {
-                            "field": "Company",
-                            "type": "nominal",
-                            "sort": {"op": "sum", "field": "Total", "order": "descending"},
-                            "title": null
-                        },
-                        "size": {
-                            "field": "Total",
-                            "type": "quantitative",
-                            "title": "Missions per Year",
-                            "scale": { "range": [50, 600] },
-                            "legend": { "orient": "bottom", "direction": "horizontal", "titlePadding": 10 }
-                        },
-                        "color": {
-                            "field": "SuccessRate",
-                            "type": "quantitative",
-                            "scale": { "scheme": "redyellowblue", "domain": [0, 1] }, // Red for 0, Blue for 1
-                            "title": "Success Rate",
-                            "legend": { "format": "%", "orient": "bottom", "direction": "horizontal", "titlePadding": 10 }
-                        },
-                        "tooltip": [
-                            { "field": "Company", "type": "nominal" },
-                            { "field": "Year", "type": "quantitative" },
-                            { "field": "Total", "title": "Total Missions" },
-                            { "field": "Successes", "title": "Successful" },
-                            { "field": "Failures", "title": "Failed" },
-                            { "field": "SuccessRate", "title": "Success Rate", "format": ".1%" }
-                        ]
-                    }
-                };
-
-                // The div ID to attach the chart to.
-                vegaEmbed('#viz', spec, { actions: false });
-            }, [chartData, topN]);
-
-            return (
-                <div style={{ width: '100%' }}>
-                    
-
-                    {loading && <div className="exoplanets-loading">Processing data for visualization</div>}
-
-                    <div id="viz" style={{ width: '100%', overflowX: 'auto' }}></div>
-                    
-                    <div className="viz-caption">
-                        <span>High Success Rate ($\approx 100\%$) appears in Blue.</span>
-                        <span>High Failure Rate ($\approx 0\%$) appears in Red.</span>
-                    </div>
-                </div>
-            );
-        };
-
-        const root = ReactDOM.createRoot(document.getElementById('viz-root'));
-        root.render(<App />);
-    </script>
-
     <!-- Placeholder scripts for your local files -->
     <script src="js/starfield.js"></script>
     <script src="js/navigation.js"></script>
+    <script src="js/missions-viz.js"></script>
 </body>
 </html>
