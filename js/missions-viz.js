@@ -3,23 +3,8 @@ let data = [];
 let topN = 15;
 let loading = false;
 const vizRootId = 'viz-root';
-
-// Sample data (same as before)
-const SAMPLE_DATA = `
-,Unnamed: 0,Company Name,Location,Datum,Detail,Status Rocket, Rocket,Status Mission
-0,0,SpaceX,"LC-39A, Kennedy Space Center, Florida, USA","Fri Aug 07, 2020 05:12 UTC",Falcon 9 Block 5 | Starlink V1 L9 & BlackSky,StatusActive,50.0 ,Success
-1,1,CASC,"Site 9401 (SLS-2), Jiuquan Satellite Launch Center, China","Thu Aug 06, 2020 04:01 UTC",Long March 2D | Gaofen-9 04 & Q-SAT,StatusActive,29.75 ,Success
-2,2,SpaceX,"Pad A, Boca Chica, Texas, USA","Tue Aug 04, 2020 23:57 UTC",Starship Prototype | 150 Meter Hop,StatusActive,,Success
-3,3,Roscosmos,"Site 200/39, Baikonur Cosmodrome, Kazakhstan","Thu Jul 30, 2020 21:25 UTC",Proton-M/Briz-M | Ekspress-80 & Ekspress-103,StatusActive,65.0 ,Success
-4,4,ULA,"SLC-41, Cape Canaveral AFS, Florida, USA","Thu Jul 30, 2020 11:50 UTC",Atlas V 541 | Perseverance,StatusActive,145.0 ,Success
-5,5,CASC,"LC-9, Taiyuan Satellite Launch Center, China","Sat Jul 25, 2020 03:13 UTC",Long March 4B | Ziyuan-3 03,StatusActive,64.68 ,Success
-6,6,Roscosmos,"Site 31/6, Baikonur Cosmodrome, Kazakhstan","Thu Jul 23, 2020 14:26 UTC",Soyuz 2.1a | Progress MS-15,StatusActive,48.5 ,Success
-100,100,NASA,"LC-39A, Kennedy Space Center, Florida, USA","Mon Nov 09, 1967 12:00 UTC",Saturn V | Apollo 4,StatusRetired,,Success
-101,101,NASA,"LC-39A, Kennedy Space Center, Florida, USA","Mon Nov 09, 1969 12:00 UTC",Saturn V | Apollo 11,StatusRetired,,Success
-102,102,RVSN USSR,"Site 1/5, Baikonur Cosmodrome, Kazakhstan","Fri May 15, 1958 07:12 UTC",Sputnik 8A91 | Sputnik-3 #2,StatusRetired,,Success
-103,103,US Navy,"LC-18A, Cape Canaveral AFS, Florida, USA","Mon Apr 28, 1958 02:53 UTC",Vanguard | Vanguard TV5,StatusRetired,,Failure
-104,104,RVSN USSR,"Site 1/5, Baikonur Cosmodrome, Kazakhstan","Sun Apr 27, 1958 09:01 UTC",Sputnik 8A91 | Sputnik-3 #1,StatusRetired,,Failure
-`;
+// CORRECTED PATH: using 'dataset' (singular) as requested
+const DATA_FILE_PATH = 'dataset/Space_Corrected.csv'; 
 
 /**
  * Updates the global loading state and refreshes the UI display.
@@ -71,22 +56,49 @@ function parseCSV(csvText) {
 }
 
 /**
- * Handles the file upload event to load a new CSV dataset.
- * @param {Event} event 
+ * Loads the initial CSV data from the specified path using fetch.
  */
-function handleFileUpload(event) {
-    const file = event.target.files[0];
-    if (file) {
-        setLoadingState(true); // Start loading animation
-        const reader = new FileReader();
-        reader.onload = (e) => parseCSV(e.target.result);
-        reader.onerror = (e) => {
-            console.error("Error reading file:", e);
-            setLoadingState(false);
-        };
-        reader.readAsText(file);
+async function loadData() {
+    setLoadingState(true);
+    try {
+        // Implement exponential backoff for robust fetching
+        const maxRetries = 3;
+        let response = null;
+        for (let attempt = 0; attempt < maxRetries; attempt++) {
+            try {
+                response = await fetch(DATA_FILE_PATH);
+                if (response.ok) break; // Success!
+            } catch (e) {
+                // Network error, try again after delay
+                if (attempt < maxRetries - 1) {
+                    await new Promise(resolve => setTimeout(resolve, Math.pow(2, attempt) * 1000));
+                } else {
+                    throw e; // Throw the last error if all retries fail
+                }
+            }
+        }
+        
+        if (!response || !response.ok) {
+            throw new Error(`HTTP error! status: ${response ? response.status : 'No response'}`);
+        }
+        
+        const csvText = await response.text();
+        parseCSV(csvText);
+    } catch (error) {
+        console.error("Failed to load initial data from CSV:", error);
+        // Display an error message to the user
+        const root = document.getElementById(vizRootId);
+        if (root) {
+             const vizDiv = root.querySelector('#viz');
+             if (vizDiv) {
+                 vizDiv.innerHTML = `<p style="color: red; padding: 20px; text-align: center;">Error loading data from ${DATA_FILE_PATH}. Please ensure the file exists in the 'dataset' folder.</p>`;
+             }
+        }
+        setLoadingState(false);
     }
 }
+
+// The handleFileUpload function has been removed as file upload is no longer needed.
 
 /**
  * Recalculates the aggregated data needed for the Punchcard chart.
@@ -178,7 +190,8 @@ function renderChart() {
             "view": { "stroke": "transparent" }
         },
         "title": `Mission Performance Timeline (Top ${topN} Companies)`,
-        "mark": "circle",
+        // UPDATED: Set the mark type and explicitly set a white stroke for visibility
+        "mark": {"type": "circle", "stroke": "#FFFFFF", "strokeWidth": 1},
         "encoding": {
             "x": {
                 "field": "Year",
@@ -231,97 +244,86 @@ function renderUI() {
         return;
     }
 
-    // Clear and build the UI structure
-    root.innerHTML = '';
-    root.style.width = '100%';
+    // Locate or create UI elements
+    let controlsDiv = root.querySelector('.viz-controls');
+    let vizDiv = root.querySelector('#viz');
+    let captionDiv = root.querySelector('.viz-caption');
 
-    // --- 1. Controls Container ---
-    const controlsDiv = document.createElement('div');
-    controlsDiv.className = 'viz-controls';
-    
-    // File Upload Control
-    const fileWrapper = document.createElement('div');
-    fileWrapper.className = 'file-input-wrapper';
-    fileWrapper.innerHTML = `
-        <label for="file-upload">Load Full CSV Dataset</label>
-        <input 
-            id="file-upload"
-            type="file" 
-            accept=".csv" 
-        />
-    `;
-    const fileInput = fileWrapper.querySelector('#file-upload');
-    fileInput.addEventListener('change', handleFileUpload);
-
-    // Top N Select Control
-    const selectWrapper = document.createElement('div');
-    const options = [10, 15, 20, 30];
-    const selectHtml = `
-        <label for="company-select">Top N Companies</label>
-        <select id="company-select">
-            ${options.map(n => `<option value="${n}" ${n === topN ? 'selected' : ''}>Top ${n}</option>`).join('')}
-        </select>
-    `;
-    selectWrapper.innerHTML = selectHtml;
-    const selectElement = selectWrapper.querySelector('#company-select');
-    selectElement.addEventListener('change', (e) => {
-        topN = Number(e.target.value);
-        renderUI(); // Re-render UI to update chart
-    });
-
-    controlsDiv.appendChild(fileWrapper);
-    controlsDiv.appendChild(selectWrapper);
-    root.appendChild(controlsDiv);
-
-    // --- 2. Loading State ---
-    if (loading) {
-        const loadingDiv = document.createElement('div');
-        loadingDiv.style.cssText = `
-            color: #6a9eff;
-            text-align: center;
-            padding: 2rem;
-            font-size: 1.2rem;
-            font-weight: bold;
-            animation: pulse 1.5s infinite; /* Assumes pulse is defined in CSS/style tag */
+    if (!controlsDiv) {
+        // --- 1. Controls Container (Create if not exists) ---
+        controlsDiv = document.createElement('div');
+        controlsDiv.className = 'viz-controls';
+        
+        // Top N Select Control
+        const selectWrapper = document.createElement('div');
+        const options = [10, 15, 20, 30];
+        const selectHtml = `
+            <label for="company-select">Top N Companies</label>
+            <select id="company-select">
+                ${options.map(n => `<option value="${n}" ${n === topN ? 'selected' : ''}>Top ${n}</option>`).join('')}
+            </select>
         `;
-        loadingDiv.textContent = 'Processing data for visualization... This might take a moment if the file is large.';
-        root.appendChild(loadingDiv);
+        selectWrapper.innerHTML = selectHtml;
+        const selectElement = selectWrapper.querySelector('#company-select');
+        selectElement.addEventListener('change', (e) => {
+            topN = Number(e.target.value);
+            // Only re-render the chart if data is loaded
+            if (!loading && data.length > 0) renderChart(); 
+        });
+
+        // Only append the select control
+        controlsDiv.appendChild(selectWrapper);
+        root.prepend(controlsDiv); // Add to the top
+    } else {
+        // Update select value if topN changed
+        const selectElement = controlsDiv.querySelector('#company-select');
+        if (selectElement) {
+             selectElement.value = topN;
+        }
     }
 
-    // --- 3. Vega-Lite Container ---
-    const vizDiv = document.createElement('div');
-    vizDiv.id = 'viz';
-    vizDiv.style.width = '100%';
-    vizDiv.style.overflowX = 'auto';
-    root.appendChild(vizDiv);
+
+    // Ensure vizDiv and captionDiv exist for updates
+    if (!vizDiv) {
+        vizDiv = document.createElement('div');
+        vizDiv.id = 'viz';
+        vizDiv.style.width = '100%';
+        vizDiv.style.overflowX = 'auto';
+        root.appendChild(vizDiv);
+    }
+
+    if (!captionDiv) {
+        captionDiv = document.createElement('div');
+        captionDiv.className = 'viz-caption';
+        captionDiv.innerHTML = `
+            <span>High Success Rate (between 80%-100%) appears in Blue.</span>
+            <span>High Failure Rate (between 0%-20%) appears in Red.</span>
+        `;
+        root.appendChild(captionDiv);
+    }
     
-    // Call renderChart here, which will use the vizDiv ID
-    if (!loading) {
-        renderChart();
+    // --- 2. Loading State / Chart Render ---
+    if (loading) {
+        vizDiv.innerHTML = `<p style="color: #6a9eff; text-align: center; padding: 2rem; font-size: 1.2rem; font-weight: bold; animation: pulse 1.5s infinite;">Processing data for visualization...</p>`;
+    } else if (data.length > 0) {
+        // Clear loading message if data is now ready
+        if (vizDiv.innerHTML.includes('Processing data')) {
+             vizDiv.innerHTML = '';
+        }
+    } else {
+         vizDiv.innerHTML = '<p style="color:#b0c4ff; padding:20px; text-align:center;">Data is loading or failed to load. Please check console for errors.</p>';
     }
-
-    // --- 4. Caption ---
-    const captionDiv = document.createElement('div');
-    captionDiv.className = 'viz-caption';
-    // Use LaTeX syntax for math in the caption
-    captionDiv.innerHTML = `
-        <span>High Success Rate ($$\\approx 100\\%$$) appears in Blue.</span>
-        <span>High Failure Rate ($$\\approx 0\\%$$) appears in Red.</span>
-    `;
-    root.appendChild(captionDiv);
 }
 
 /**
  * Initialization function called when the DOM is ready.
  */
 function init() {
-    // 1. Load sample data initially
-    setLoadingState(true);
-    parseCSV(SAMPLE_DATA);
-
-    // 2. Initial render of the UI elements
-    // The renderUI call will eventually call renderChart once data is parsed.
+    // 1. Initial render of the UI elements (before data is loaded)
     renderUI(); 
+    
+    // 2. Load the CSV data automatically
+    loadData();
 }
 
 // Start the application when the window is loaded
