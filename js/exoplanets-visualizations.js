@@ -282,7 +282,7 @@ class ExoplanetsViz {
                             "x1": 1, "y1": 1, "x2": 0, "y2": 1,
                             "gradient": "linear",
                             "stops": [
-                                {"offset": 0, "color": "#4A90E2"},
+                                {"offset": 0, "color": "#50E3C2"},
                                 {"offset": 1, "color": "#50E3C2"}
                             ]
                         },
