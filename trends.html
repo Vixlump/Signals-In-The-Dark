@@ -6,13 +6,202 @@
     <title>Signals in the Dark - Yearly Trends</title>
     <link rel="stylesheet" href="css/style.css">
     <script src="https://d3js.org/d3.v7.min.js"></script>
+    
+    <script src="https://cdn.jsdelivr.net/npm/vega@5" id="vega-script"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega-lite@5" id="vega-lite-script"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega-embed@6" id="vega-embed-script"></script>
+    
+    <style id="ufo-trends-styles">
+        .ufo-trends-section {
+            width: 100%;
+            margin: 20px 0 40px 0;
+        }
+        
+        .ufo-trends-title-box {
+            text-align: center;
+            margin: 0 auto 30px auto;
+            padding: 25px;
+            background: linear-gradient(135deg, rgba(10, 18, 37, 0.95) 0%, rgba(30, 42, 71, 0.95) 100%);
+            border-radius: 15px;
+            border: 2px solid #00E1FF;
+            box-shadow: 0 0 25px rgba(0, 225, 255, 0.4);
+            max-width: 800px;
+            position: relative;
+            z-index: 10;
+        }
+        
+        .ufo-trends-title-box h2 {
+            font-size: 2.5rem;
+            color: #00E1FF;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            text-shadow: 0 0 15px rgba(0, 225, 255, 0.7);
+            letter-spacing: 1px;
+        }
+        
+        .ufo-trends-container {
+            width: 100%;
+            background: #0A1225;
+            border-radius: 15px;
+            border: 2px solid #4A6FCC;
+            box-shadow: 0 0 25px rgba(74, 111, 204, 0.4);
+            padding: 40px 30px;
+            position: relative;
+            min-height: 750px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            overflow: visible !important;
+        }
+        
+        .ufo-trends-view-wrapper {
+            width: 100%;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+            overflow: visible !important;
+        }
+        
+        .ufo-trends-view {
+            width: 100%;
+            margin: 0 auto;
+            overflow: visible !important;
+        }
+        
+        /* Ensure the Vega canvas is fully visible */
+        .ufo-trends-view canvas, 
+        .ufo-trends-view svg {
+            max-width: 100%;
+            height: auto !important;
+            overflow: visible !important;
+        }
+        
+        /* Fix for Vega legend labels */
+        .vega-embed .vega-legend-label {
+            fill: white !important;
+            color: white !important;
+            font-size: 13px !important;
+            font-weight: 500 !important;
+        }
+        
+        .vega-embed .vega-legend-title {
+            fill: white !important;
+            color: white !important;
+            font-size: 15px !important;
+            font-weight: bold !important;
+        }
+        
+        /* Custom scrollbar for horizontal scrolling if needed */
+        .ufo-trends-horizontal-scroll {
+            overflow-x: auto;
+            overflow-y: visible;
+            padding-bottom: 25px;
+            margin-bottom: 15px;
+            width: 100%;
+            min-height: 600px;
+        }
+        
+        .ufo-trends-horizontal-scroll::-webkit-scrollbar {
+            height: 14px;
+        }
+        
+        .ufo-trends-horizontal-scroll::-webkit-scrollbar-track {
+            background: #1e2a47;
+            border-radius: 7px;
+            margin: 0 20px;
+        }
+        
+        .ufo-trends-horizontal-scroll::-webkit-scrollbar-thumb {
+            background: linear-gradient(90deg, #4A6FCC, #00E1FF);
+            border-radius: 7px;
+        }
+        
+        .ufo-trends-horizontal-scroll::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(90deg, #00E1FF, #4A6FCC);
+        }
+        
+        /* Info box for legend clarification */
+        .legend-info {
+            background: rgba(30, 42, 71, 0.8);
+            border-radius: 10px;
+            padding: 15px 20px;
+            margin-top: 20px;
+            border-left: 4px solid #00E1FF;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .legend-info p {
+            color: #FFFFFF;
+            margin: 0;
+            font-size: 14px;
+            line-height: 1.5;
+            font-style: italic;
+        }
+        
+        /* Mobile responsive adjustments */
+        @media (max-width: 1400px) {
+            .ufo-trends-title-box h2 {
+                font-size: 2rem;
+            }
+            
+            .ufo-trends-container {
+                padding: 35px 25px;
+                min-height: 700px;
+            }
+            
+            .ufo-trends-title-box {
+                padding: 20px;
+                max-width: 700px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .ufo-trends-title-box h2 {
+                font-size: 1.7rem;
+                padding: 10px;
+            }
+            
+            .ufo-trends-container {
+                padding: 30px 15px;
+                min-height: 650px;
+            }
+            
+            .ufo-trends-title-box {
+                padding: 15px;
+                max-width: 90%;
+                margin-bottom: 20px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .ufo-trends-title-box h2 {
+                font-size: 1.4rem;
+            }
+            
+            .ufo-trends-container {
+                padding: 20px 10px;
+                min-height: 600px;
+            }
+            
+            .ufo-trends-title-box {
+                padding: 12px;
+            }
+            
+            .legend-info {
+                padding: 10px 15px;
+                margin-top: 15px;
+            }
+        }
+    </style>
 </head>
 <body>
     <div id="starfield"></div>
     
     <header>
-        <!-- <div class="logo">Signals in the Dark</div>
-        <div class="team-name">🐸 Graphical Hoppers 🐸</div> -->
         <nav>
             <ul>
                 <li><a href="index.html" class="nav-link">Home</a></li>
@@ -32,13 +221,21 @@
             <div class="card">
                 <p>This visualization answers the next natural question: "When do sightings occur, and how have they changed over decades?"</p>
             </div>
+            <div class="ufo-trends-title-box">
+                <h2>UFO Sightings Over Time (Top 5 Countries)</h2>
+            </div>
             
             <div class="visualization-container">
-                <div class="visualization-placeholder">
-                    Vega-Lite Line Chart<br>
-                    X-axis = Year<br>
-                    Y-axis = Number of sightings<br>
-                    Annotations for major events (Phoenix Lights 1997, etc.)
+                <div class="ufo-trends-section">
+                    
+                    
+                    <div class="ufo-trends-container">
+                        <div class="ufo-trends-horizontal-scroll">
+                            <div class="ufo-trends-view-wrapper">
+                                <div id="ufo-trends-view" class="ufo-trends-view"></div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
             
@@ -55,6 +252,307 @@
     <footer>
         <p>Signals in the Dark &copy; 2025 Graphical Hoppers: Cohen ter Heide, Danelly Joseph, Riya Daiya</p>
     </footer>
+
+    <script id="ufo-trends-script">
+        document.addEventListener('DOMContentLoaded', function() {
+            function initializeUFOTrends() {
+                if (typeof vegaEmbed !== 'undefined') {
+                    const ufoTrendsConfig = {
+                        spec: {
+                            width: 1200,
+                            height: 600,
+                            background: "#0A1225",
+                            padding: { top: 30, right: 40, bottom: 100, left: 80 },
+
+                            data: { url: "dataset/scrubbedline.csv" },
+
+                            transform: [
+                                {
+                                    calculate: "year(toDate(datum.datetime))",
+                                    as: "year"
+                                },
+                                {
+                                    filter: "datum.year != null && datum.country != null && datum.country != ''"
+                                },
+                                {
+                                    filter: "datum.year >= 1946"
+                                },
+                                {
+                                    aggregate: [{ op: "count", as: "sightings" }],
+                                    groupby: ["year", "country"]
+                                },
+                                {
+                                    window: [{ op: "rank", as: "rank" }],
+                                    sort: [{ field: "year" }, { field: "sightings", order: "descending" }],
+                                    groupby: ["year"]
+                                },
+                                {
+                                    filter: "datum.rank <= 5"
+                                }
+                            ],
+
+                            mark: { type: "line", point: { filled: true, size: 60 } },
+
+                            encoding: {
+                                x: {
+                                    field: "year",
+                                    type: "quantitative",
+                                    axis: {
+                                        labelColor: "white",
+                                        titleColor: "white",
+                                        labelFontSize: 12,
+                                        titleFontSize: 14,
+                                        format: "d",
+                                        gridColor: "#4A6FCC",
+                                        gridOpacity: 0.7,
+                                        tickColor: "white",
+                                        labelAngle: 0,
+                                        labelPadding: 10,
+                                        titlePadding: 25
+                                    },
+                                    title: "Year"
+                                },
+                                y: {
+                                    field: "sightings",
+                                    type: "quantitative",
+                                    axis: {
+                                        labelColor: "white",
+                                        titleColor: "white",
+                                        labelFontSize: 12,
+                                        titleFontSize: 14,
+                                        gridColor: "#4A6FCC",
+                                        gridOpacity: 0.7,
+                                        tickColor: "white",
+                                        titlePadding: 15,
+                                        labelPadding: 8
+                                    },
+                                    title: "Number of Sightings"
+                                },
+                                color: {
+                                    field: "country",
+                                    type: "nominal",
+                                    title: "Country",
+                                    scale: {
+                                        range: [
+                                            "#FFFFFF",  // White
+                                            "#F9FF3B",  // Yellow
+                                            "#7B2FFF",  // Purple
+                                            "#3B6FCC",  // Blue
+                                            "#00E1FF",  // Cyan
+                                            "#00FF8F"   // Green
+                                        ]
+                                    },
+                                    legend: {
+                                        labelColor: "white",
+                                        titleColor: "white",
+                                        labelFontSize: 13,
+                                        titleFontSize: 16,
+                                        labelFontWeight: "bold",
+                                        titleFontWeight: "bold",
+                                        labelExpr: `
+                                            datum.label === 'us' ? 'United States' :
+                                            datum.label === 'ca' ? 'Canada' :
+                                            datum.label === 'au' ? 'Australia' :
+                                            datum.label === 'gb' ? 'United Kingdom' :
+                                            datum.label === 'de' ? 'Germany' :
+                                            datum.label === 'fr' ? 'France' :
+                                            datum.label === 'br' ? 'Brazil' :
+                                            datum.label === 'mx' ? 'Mexico' :
+                                            datum.label === 'es' ? 'Spain' :
+                                            datum.label === 'it' ? 'Italy' :
+                                            datum.label === 'undefined' ? 'Unknown' :
+                                            datum.label
+                                        `,
+                                        orient: "bottom",
+                                        direction: "horizontal",
+                                        titleLimit: 0,
+                                        columns: 5,
+                                        rowPadding: 15,
+                                        columnPadding: 30,
+                                        symbolSize: 200,
+                                        symbolStrokeWidth: 2,
+                                        labelOffset: 10,
+                                        title: "Country (Click to Filter)"
+                                    }
+                                },
+                                tooltip: [
+                                    { field: "year", type: "quantitative", title: "Year" },
+                                    { field: "country", type: "nominal", title: "Country" },
+                                    { field: "sightings", type: "quantitative", title: "Sightings", format: ".0f" }
+                                ]
+                            },
+
+                            layer: [
+                                { mark: { type: "line", strokeWidth: 3 } },
+                                {
+                                    mark: { 
+                                        type: "point", 
+                                        size: 80,
+                                        stroke: "white",
+                                        strokeWidth: 1
+                                    }
+                                },
+                                {
+                                    data: {
+                                        values: [
+                                            { year: 1997, y: 300, event: "US: Phoenix Lights (1997)" },
+                                            { year: 1967, y: 250, event: "US: Shag Harbour (1967)" },
+                                            { year: 1980, y: 270, event: "US: Rendlesham Forest (1980)" }
+                                        ]
+                                    },
+                                    mark: {
+                                        type: "text",
+                                        dx: 10,
+                                        dy: -10,
+                                        fontSize: 13,
+                                        fontWeight: "bold",
+                                        color: "#FFFFFF",
+                                        opacity: 0.9
+                                    },
+                                    encoding: {
+                                        x: { field: "year", type: "quantitative" },
+                                        y: { field: "y", type: "quantitative" },
+                                        text: { field: "event" }
+                                    }
+                                }
+                            ],
+                            
+                            selection: {
+                                country_select: {
+                                    type: "multi",
+                                    fields: ["country"],
+                                    bind: "legend"
+                                }
+                            },
+                            
+                            opacity: {
+                                condition: {
+                                    selection: "country_select",
+                                    value: 1
+                                },
+                                value: 0.2
+                            }
+                        },
+                        
+                        // Custom embed options
+                        options: {
+                            actions: {
+                                export: true,
+                                source: false,
+                                compiled: false,
+                                editor: false
+                            },
+                            theme: "dark",
+                            renderer: "canvas",
+                            tooltip: {
+                                theme: "dark"
+                            }
+                        }
+                    };
+
+                    vegaEmbed("#ufo-trends-view", ufoTrendsConfig.spec, ufoTrendsConfig.options)
+                        .then(result => {
+                            console.log("UFO Trends visualization loaded successfully");
+                            
+                            window.ufoTrendsView = result.view;
+                            
+                            function ensureFullVisibility() {
+                                const container = document.querySelector('.ufo-trends-view-wrapper');
+                                const viewElement = document.getElementById('ufo-trends-view');
+                                
+                                if (container && viewElement && window.ufoTrendsView) {
+                                   
+                                    const availableWidth = container.clientWidth - 60;
+                                    const targetWidth = Math.max(800, Math.min(availableWidth, 1200));
+                                    
+                                    
+                                    window.ufoTrendsView.width(targetWidth).runAsync();
+                                    
+                                    setTimeout(() => {
+                                        const legendLabels = viewElement.querySelectorAll('.vega-legend-label');
+                                        legendLabels.forEach(label => {
+                                            label.style.fill = 'white';
+                                            label.style.color = 'white';
+                                            label.style.fontSize = '13px';
+                                            label.style.fontWeight = 'bold';
+                                            label.style.opacity = '1';
+                                        });
+                                        
+                                        const legendTitle = viewElement.querySelector('.vega-legend-title');
+                                        if (legendTitle) {
+                                            legendTitle.style.fill = 'white';
+                                            legendTitle.style.color = 'white';
+                                            legendTitle.style.fontSize = '15px';
+                                            legendTitle.style.fontWeight = 'bold';
+                                            legendTitle.style.opacity = '1';
+                                        }
+                                        
+                                        const svg = viewElement.querySelector('svg');
+                                        if (svg) {
+                                            svg.style.overflow = 'visible';
+                                            svg.style.maxWidth = '100%';
+                                            svg.style.height = 'auto';
+                                        }
+                                    }, 500);
+                                    
+                                    if (targetWidth < 1000) {
+                                        const existingHint = document.querySelector('.scroll-hint');
+                                        if (!existingHint) {
+                                            const scrollHint = document.createElement('div');
+                                            scrollHint.className = 'scroll-hint';
+                                            scrollHint.style.cssText = `
+                                                color: #00E1FF;
+                                                text-align: center;
+                                                font-size: 14px;
+                                                margin-top: 15px;
+                                                padding: 8px;
+                                                font-style: italic;
+                                                opacity: 0.8;
+                                                background: rgba(10, 18, 37, 0.7);
+                                                border-radius: 5px;
+                                            `;
+                                            scrollHint.textContent = '← Scroll horizontally to see full chart →';
+                                            viewElement.parentNode.appendChild(scrollHint);
+                                        }
+                                    }
+                                }
+                            }
+                            
+                            setTimeout(ensureFullVisibility, 100);
+                            
+                            window.addEventListener('resize', ensureFullVisibility);
+                            
+                            setTimeout(() => {
+                                if (window.ufoTrendsView) {
+                                    window.ufoTrendsView.runAsync();
+                                    ensureFullVisibility();
+                                }
+                            }, 1000);
+                            
+                            setTimeout(ensureFullVisibility, 2000);
+                        })
+                        .catch(error => {
+                            console.error("Error embedding UFO Trends visualization:", error);
+                            document.getElementById('ufo-trends-view').innerHTML = 
+                                '<div style="color: white; text-align: center; padding: 50px; font-family: Arial, sans-serif; background: rgba(10, 18, 37, 0.9); border-radius: 10px; border: 2px solid #4A6FCC;">' +
+                                '<h3 style="color: #00E1FF;">Visualization Loading Error</h3>' +
+                                '<p>Unable to load the UFO sightings chart. Please check that:</p>' +
+                                '<ul style="text-align: left; display: inline-block; margin: 20px auto;">' +
+                                '<li>The data file exists at "dataset/scrubbedline.csv"</li>' +
+                                '<li>Your internet connection is working</li>' +
+                                '<li>JavaScript is enabled in your browser</li>' +
+                                '</ul>' +
+                                '<p style="color: #F9FF3B;">Error details: ' + error.message + '</p>' +
+                                '</div>';
+                        });
+                } else {
+                    setTimeout(initializeUFOTrends, 100);
+                }
+            }
+            
+            setTimeout(initializeUFOTrends, 500);
+        });
+    </script>
 
     <script src="js/starfield.js"></script>
     <script src="js/navigation.js"></script>
