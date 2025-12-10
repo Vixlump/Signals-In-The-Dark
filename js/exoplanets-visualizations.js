@@ -109,9 +109,9 @@ class ExoplanetsViz {
                 );
 
                 const exoplanetsTimelineData = Array.from(exoplanetsYearlyData, ([year, count]) => ({
-                    year: parseInt(year),
+                    year: `${year}-01-01`,
                     discoveries: count
-                })).sort((a, b) => a.year - b.year);
+                })).sort((a, b) => parseInt(a.year) - parseInt(b.year));
 
                 const exoplanetsTimelineSpec = {
                     "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
@@ -421,7 +421,7 @@ class ExoplanetsViz {
                             {"field": "discoverymethod", "type": "nominal", "title": "Method"},
                             {"field": "pl_rade", "type": "quantitative", "title": "Radius (Earth Radii)", "format": ".2f"},
                             {"field": "pl_eqt", "type": "quantitative", "title": "Temperature (K)"},
-                            {"field": "discyear", "type": "temporal", "title": "Discovery Year"}
+                            {"field": "discyear", "type": "quantitative", "title": "Discovery Year"}
                         ]
                     }
                 };
