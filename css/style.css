@@ -88,7 +88,7 @@ h2 {
     font-size: 1.8rem;
     margin: 1.5rem 0 1rem;
     color: #8ab4ff;
-    border-bottom: 1px solid rgba(138, 180, 255, 0.3);
+    /* border-bottom: 1px solid rgba(138, 180, 255, 0.3); */
     padding-bottom: 0.5rem;
     
 }
@@ -228,9 +228,9 @@ p {
   justify-content: flex-end;
   gap: 0.75rem;
   padding: 1rem;
-  color: #000000;
+  color: #ffffff;
   text-align: center;
-  /* text-shadow: 0 2px 6px rgba(0,0,0,.7);  */
+  text-shadow: 0 2px 6px rgba(0,0,0,.7); 
   margin: 10rem;
 
   
@@ -439,4 +439,9 @@ footer {
 
 .centre-align {
     text-align: center;
+}
+
+.responsive-img {
+    max-width: 100%;
+    height: auto;
 }
