@@ -445,3 +445,19 @@ footer {
     max-width: 100%;
     height: auto;
 }
+
+.button {
+    background-color: #2270ff;
+    border: 1px solid #b0c4ff;
+    border-radius: 2rem;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.button:hover{
+    background-color: #4284fe;
+}
