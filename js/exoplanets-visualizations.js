@@ -413,7 +413,14 @@ class ExoplanetsViz {
                                 "titleColor": "#ffffff"
                             },
                             "scale": {
-                                "scheme": "viridis"
+                                "range": [
+                                "#FF0000", // Red (high contrast)
+                                "#00AA00", // Bright Green (high contrast)
+                                "#0077FF", // Blue (high contrast)
+                                "#FFD700", // Gold/Bright Yellow
+                                "#FF69B4", // Hot Pink
+                                "#FFA500"  // Orange
+                                ]
                             }
                         },
                         "tooltip": [
