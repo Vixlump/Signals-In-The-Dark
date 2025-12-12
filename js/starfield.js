@@ -184,13 +184,13 @@ function getRandomStarColor() {
         '#ffffff', //White
         '#6a9eff', //Blue
         '#4a7eff', //Deep Blue
-        '#ff6a9e', //Pink
-        '#ffb46a', //Orange
-        '#9eff6a', //Green
-        '#6affb4', //Teal
-        '#b46aff', //Purple
-        '#ff4a4a', //Red
-        '#ffff6a'  //Yellow
+        // '#ff6a9e', //Pink
+        // '#ffb46a', //Orange
+        // '#9eff6a', //Green
+        // '#6affb4', //Teal
+        // '#b46aff', //Purple
+        // '#ff4a4a', //Red
+        // '#ffff6a'  //Yellow
     ];
     return colors[Math.floor(Math.random() * colors.length)];
 }
