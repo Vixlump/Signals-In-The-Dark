@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Signals in the Dark - Yearly Trends</title>
+
+  <link rel="stylesheet" href="css/style.css" />
+
+  <!-- Libraries -->
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vega@5"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vega-lite@5"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vega-embed@6"></script>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Funnel+Display:wght@300..800&family=IBM+Plex+Sans:wght@300..700&display=swap"
+    rel="stylesheet"
+  />
+</head>
+
+<body>
+  <div id="starfield"></div>
+
+  <header>
+    <nav>
+      <ul>
+        <li><a href="index.html" class="nav-link">Prologue</a></li>
+        <li><a href="world-map.html" class="nav-link">World Map</a></li>
+        <li><a href="trends.html" class="nav-link active">Yearly Trends</a></li>
+        <li><a href="missions.html" class="nav-link">Space Missions</a></li>
+        <li><a href="exoplanets.html" class="nav-link">Exoplanets</a></li>
+        <li><a href="conclusion.html" class="nav-link">Conclusion</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    <section class="page active">
+
+      <h1>UFO Sightings Over Time (Top 5 Countries)</h1>
+
+      <div class="card">
+        <p>
+          This visualization answers the next natural question:
+          “When do sightings occur, and how have they changed over decades?”
+        </p>
+      </div>
+
+      <!-- VISUALIZATION CARD -->
+      <div class="card">
+        <div class="ufo-trends-view-wrapper">
+          <div id="ufo-trends-view"></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>Pattern Analysis</h3>
+        <p>
+          Sightings surged in the late 1990s and 2000s, shaped by the rise of the
+          internet, popular media, and renewed fascination with extraterrestrials.
+        </p>
+
+        <h3>Narrative Flow</h3>
+        <p>
+          Following the spatial analysis, this temporal visualization advances
+          the story from “Where?” to “When?”
+        </p>
+      </div>
+
+      <a href="missions.html">
+        <button class="button"><strong>Next</strong></button>
+      </a>
+
+    </section>
+  </main>
+
+  <footer>
+    <p>
+      Signals in the Dark © 2025 Graphical Hoppers:
+      Cohen ter Heide, Danelly Joseph, Riya Daiya
+    </p>
+  </footer>
+
+  <script src="js/starfield.js"></script>
+  <script src="js/navigation.js"></script>
+  <script src="js/ufo-trends.js"></script>
+</body>
+</html>

@@ -63,6 +63,7 @@ async function worldmapRenderMap(allData) {
     width: 900,
     height: 520,
     background: "transparent",
+   
 
     projection: {
       type: "mercator",
