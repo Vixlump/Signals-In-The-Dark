@@ -1,75 +1,122 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Signals in the Dark - World Map</title>
-    <link rel="stylesheet" href="css/style.css">
-    <script src="https://d3js.org/d3.v7.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/vega@5"></script>
-    <script src="https://cdn.jsdelivr.net/npm/vega-lite@5"></script>
-    <script src="https://cdn.jsdelivr.net/npm/vega-embed@6"></script>
-    <script src="https://cdn.jsdelivr.net/npm/topojson@3"></script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Signals in the Dark - World Map</title>
 
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Funnel+Display:wght@300..800&family=Funnel+Sans:ital,wght@0,300..800;1,300..800&family=IBM+Plex+Sans:ital,wght@0,100..700;1,100..700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css" />
+
+  <!-- Libraries -->
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vega@5"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vega-lite@5"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vega-embed@6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/topojson@3"></script>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Funnel+Display:wght@300..800&family=Funnel+Sans:ital,wght@0,300..800;1,300..800&family=IBM+Plex+Sans:ital,wght@0,100..700;1,100..700&display=swap"
+    rel="stylesheet"
+  >
 </head>
+
 <body>
-    <div id="starfield"></div>
-    
-    <header>
-        <!-- <div class="logo">Signals in the Dark</div>
-        <div class="team-name">🐸 Graphical Hoppers 🐸</div> -->
-        <nav>
-            <ul>
-                <li><a href="index.html" class="nav-link">Prologue</a></li>
-                <li><a href="world-map.html" class="nav-link active">World Map</a></li>
-                <li><a href="trends.html" class="nav-link">Yearly Trends</a></li>
-                <li><a href="missions.html" class="nav-link">Space Missions</a></li>
-                <li><a href="exoplanets.html" class="nav-link">Exoplanets</a></li>
-                <!-- <li><a href="comparison.html" class="nav-link">Science vs Perception</a></li> -->
-                <li><a href="conclusion.html" class="nav-link">Conclusion</a></li>
-            </ul>
-        </nav>
-    </header>
-    
-    <main>
-        <section id="world-map" class="page active">
-            <h1>Where the Sky Lights Up: Global UFO Sightings</h1>
-            <div class="card">
-                <p>This map grounds the abstract idea of UFOs in geographical reality, showing where sightings have been reported worldwide.</p>
-            </div>
-            
-            <div class="worldmap-visualization-container">
-                <!-- World Map Controls -->
-                <div class="worldmap-controls">
-                    <select id="worldmap-decadeSelect" class="worldmap-dropdown"></select>
-                </div>
-                
-                <!-- World Map Visualization -->
-                <div id="worldmap-view" class="worldmap-container"></div>
-            </div>
-            
-            <div class="card">
-                <h3>Insight</h3>
-                <p>"Most reports come from the United States, not because UFOs prefer it, but because of reporting access, cultural influence, and technology. Still, sightings appear worldwide - in cities, deserts, and coastlines."</p>
-                
-                <h3>Why This Visualization Belongs Here</h3>
-                <p>"Where?" is the first natural question when exploring UFO phenomena. This map provides spatial grounding before moving into temporal trends, establishing a foundation for understanding the data.</p>
-            </div>
+  <div id="starfield"></div>
 
-            <a href="trends.html">
-                    <button class="button"><strong>Next</strong></button>
-            </a>
-        </section>
-    </main>
-    
-    <footer>
-        <p>Signals in the Dark &copy; 2025 Graphical Hoppers: Cohen ter Heide, Danelly Joseph, Riya Daiya</p>
-    </footer>
+  <header>
+    <nav>
+      <ul>
+        <li><a href="index.html" class="nav-link">Prologue</a></li>
+        <li><a href="world-map.html" class="nav-link active">World Map</a></li>
+        <li><a href="trends.html" class="nav-link">Yearly Trends</a></li>
+        <li><a href="missions.html" class="nav-link">Space Missions</a></li>
+        <li><a href="exoplanets.html" class="nav-link">Exoplanets</a></li>
+        <li><a href="conclusion.html" class="nav-link">Conclusion</a></li>
+      </ul>
+    </nav>
+  </header>
 
-    <script src="js/starfield.js"></script>
-    <script src="js/navigation.js"></script>
-    <script type="module" src="js/worldmap.js"></script>
+  <main>
+    <section id="world-map" class="page active">
+
+      <h1>Where the Sky Lights Up: Global UFO Sightings</h1>
+
+      <div class="card">
+        <p>
+          This World Map of Global UFO sightings, grounds the abstract idea of UFOs in geographical reality,
+          showing where sightings have been reported worldwide; to get the bigger picture. <i>*If you want to scroll the slider
+          through the decades, make sure the "Show All Decades" box is unchecked.*</i>
+        </p>
+      </div>
+
+      <div class="worldmap-visualization-container">
+
+       
+        <div class="worldmap-controls">
+
+          <!-- Checkbox: All decades -->
+          <label class="worldmap-checkbox">
+            <input
+              type="checkbox"
+              id="worldmap-allDecades"
+              checked
+            />
+            Show All Decades
+          </label>
+
+          <!-- Slider: Decade selector -->
+          <div class="worldmap-slider-wrapper">
+            <input
+              type="range"
+              id="worldmap-decadeSlider"
+              min="1900"
+              max="2010"
+              step="10"
+              value="2010"
+            />
+            <span id="worldmap-decadeLabel">2010s</span>
+          </div>
+
+        </div>
+
+        <!-- World Map -->
+        <div id="worldmap-view" class="worldmap-container"></div>
+      </div>
+
+      <div class="card">
+        <h3>Insight</h3>
+        <p>
+          Most reports come from the United States, not because UFOs prefer it,
+          but because of reporting access, cultural influence, and technology.
+          Still, sightings appear worldwide — in cities, deserts, and coastlines.
+        </p>
+
+        <h3>Why This Visualization Belongs Here</h3>
+        <p>
+          “Where?” is the first natural question when exploring UFO phenomena.
+          This map provides spatial grounding before moving into temporal trends,
+          establishing a foundation for understanding the data.
+        </p>
+      </div>
+
+      <a href="trends.html">
+        <button class="button"><strong>Next</strong></button>
+      </a>
+
+    </section>
+  </main>
+
+  <footer>
+    <p>
+      Signals in the Dark &copy; 2025 Graphical Hoppers:
+      Cohen ter Heide, Danelly Joseph, Riya Daiya
+    </p>
+  </footer>
+
+  <script src="js/starfield.js"></script>
+  <script src="js/navigation.js"></script>
+  <script type="module" src="js/worldmap.js"></script>
 </body>
 </html>
