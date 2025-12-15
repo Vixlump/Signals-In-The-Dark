@@ -1,46 +1,50 @@
  document.addEventListener('DOMContentLoaded', function() {
             function initializeUFOTrends() {
                 if (typeof vegaEmbed !== 'undefined') {
+                    
                     const ufoTrendsConfig = {
                         spec: {
                             width: "card",
                             height: 500,
                             background: "transparent",
-                            padding: { top: 30, right: 40, bottom: 10, left: -1 },
+                            padding: { top: 30, right: 10, bottom: 10, left: -1 },
 
 
                             data: { url: "dataset/scrubbedline.csv" },
 
 
                             transform: [
-                                {
-                                    calculate: "year(toDate(datum.datetime))",
-                                    as: "year"
-                                },
-                                {
-                                    filter: "datum.year != null && datum.country != null && datum.country != ''"
-                                },
-                                {
-                                    filter: "datum.year >= 1946"
-                                },
-                                {
-                                    aggregate: [{ op: "count", as: "sightings" }],
-                                    groupby: ["year", "country"]
-                                },
-                                {
-                                    window: [{ op: "rank", as: "rank" }],
-                                    sort: [{ field: "year" }, { field: "sightings", order: "descending" }],
-                                    groupby: ["year"]
-                                },
-                                {
-                                    filter: "datum.rank <= 5"
-                                }
+                                    {
+                                        calculate: "year(toDate(datum.datetime))",
+                                        as: "year"
+                                    },
+                                    {
+                                        filter: "datum.year != null && datum.country != null && datum.country != ''"
+                                    },
+                                    {
+                                        filter: "datum.year >= 1956"
+                                    },
+
+
+                                    {
+                                        aggregate: [{ op: "count", as: "sightings" }],
+                                        groupby: ["year", "country"]
+                                    },
+                                    {
+                                        window: [{ op: "rank", as: "rank" }],
+                                        sort: [
+                                        { field: "year" },
+                                        { field: "sightings", order: "descending" }
+                                        ],
+                                        groupby: ["year"]
+                                    },
+                                    {
+                                        filter: "datum.rank <= 5"
+                                    }
                             ],
 
 
-                            mark: { type: "line", point: { filled: true, size: 60 } },
-
-
+             
                             encoding: {
                                 x: {
                                     field: "year",
@@ -56,7 +60,8 @@
                                         tickColor: "white",
                                         labelAngle: 0,
                                         labelPadding: 10,
-                                        titlePadding: 25
+                                        titlePadding: 25,
+                                        labelAngle: -45
                                     },
                                     title: "Year"
                                 },
@@ -120,7 +125,7 @@
                                         symbolSize: 200,
                                         symbolStrokeWidth: 2,
                                         labelOffset: 10,
-                                        title: "Country (Click to Filter)"
+                                        title: "Country"
                                     }
                                 },
                                 tooltip: [
@@ -133,6 +138,8 @@
 
                             layer: [
                                 { mark: { type: "line", strokeWidth: 3 } },
+
+                                
                                 {
                                     mark: {
                                         type: "point",
@@ -141,6 +148,7 @@
                                         strokeWidth: 1
                                     }
                                 },
+
                                 {
                                     data: {
                                         values: [
@@ -174,13 +182,7 @@
                                 }
                             },
                            
-                            opacity: {
-                                condition: {
-                                    selection: "country_select",
-                                    value: 1
-                                },
-                                value: 0.2
-                            }
+                           
                         },
                        
                         // Custom embed options
@@ -200,6 +202,11 @@
                     };
 
 
+                    
+                    
+                    
+                    
+                    
                     vegaEmbed("#ufo-trends-view", ufoTrendsConfig.spec, ufoTrendsConfig.options)
                         .then(result => {
                             console.log("UFO Trends visualization loaded successfully");
@@ -213,7 +220,7 @@
                                 if (container && viewElement && window.ufoTrendsView) {
                                    
                                     const availableWidth = container.clientWidth - 60;
-                                    const targetWidth = Math.max(800, Math.min(availableWidth, 1200));
+                                    const targetWidth = Math.max(50, Math.min(availableWidth, 1200));
                                    
                                    
                                     window.ufoTrendsView.width(targetWidth).runAsync();

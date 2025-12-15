@@ -613,9 +613,7 @@ footer {
 
 /*Styling for Global UFO trends*/
 
-/* ==============================
-   UFO Trends Visualization
-============================== */
+
 
 
 .ufo-trends-view-wrapper {
@@ -625,7 +623,16 @@ footer {
 
 #ufo-trends-view {
   max-width: 280rem;
+  
+  
 }
+
+
+
+
+
+
+
 
 /* IMPORTANT: allow Vega to display tooltips */
 .vega-embed,
