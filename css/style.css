@@ -603,39 +603,6 @@ footer {
   overflow: visible !important;
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 /* Styling for the Voyager Embed Card */
 
 .voyager-card {
@@ -664,4 +631,63 @@ footer {
     width: 100%;
     height: 100%;
     display: block;
+}
+
+/* --- Discovery Methods Explained Section --- */
+
+#discovery-methods-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+    margin-top: 20px;
+    padding: 10px;
+}
+
+.method-item {
+    background: rgb(10 12 18 / 70%);
+    border: 1px solid #1c3263;
+    border-radius: 12px;
+    padding: 15px;
+    /* border-left: 4px solid #50E3C2; */
+    position: relative; /* Crucial for image positioning */
+    /* display: flex; */
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.method-header {
+    /* display: flex; */
+    align-items: center;
+}
+
+.method-header h3 {
+    margin: 0;
+    color: #8ab4ff;
+    font-size: 1.2rem;
+}
+
+.method-icon {
+    width: 70px;
+    height: 70px;
+    margin-right: 10px;
+    object-fit: contain;
+    /* filter: drop-shadow(0 0 5px rgba(80, 227, 194, 0.5)); */
+}
+
+/* Style for the image diagrams */
+.method-item + img {
+    max-width: 100%;
+    height: auto;
+    margin-top: 10px;
+    margin-bottom: 20px;
+    border-radius: 6px;
+    border: 1px solid rgba(80, 227, 194, 0.2);
+}
+
+.method-explanation {
+    /* Slight margin at the top to separate from the H3 */
+    margin-top: 10px; 
+    font-size: 0.95rem; 
+    line-height: 1.5;
+    color: #c0c0e0; /* A slightly dimmer color for body text */
 }
