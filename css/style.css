@@ -60,6 +60,11 @@ nav a {
     transition: all 0.3s ease;
 }
 
+.a-inline{
+    color: #6a9eff;
+    font-family: "IBM Plex Sans", sans-serif, 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
 nav a:hover, nav a.active {
     background: rgba(106, 158, 255, 0.2);
     color: #6a9eff;
@@ -134,7 +139,7 @@ p {
     background: rgba(20, 20, 40);
     border-radius: 18px;
     padding: 2rem;
-    margin-bottom: 18rem;
+    margin-bottom: 5rem;
     border: 1px solid rgba(100, 100, 255, 0.2);
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
     /* text-align: center; */
@@ -478,7 +483,7 @@ footer {
 }
 
 .button {
-    background-color: #070713;
+    background-color: #10102c;
     border: 2px solid #2270ff;
     border-radius: 2rem;
     color: #22ff59;
@@ -488,6 +493,11 @@ footer {
     font-size: 16px;
     cursor: pointer;
     letter-spacing: 1px;
+
+    display: block;
+    width: 250px;
+    margin: 20px auto;
+    text-align: center;
     
 
     box-shadow:

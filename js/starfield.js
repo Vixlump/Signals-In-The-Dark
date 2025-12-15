@@ -8,7 +8,7 @@ function createStarfield() {
     const height = window.innerHeight;
     
     const stars = [];
-    const starCount = 400;
+    const starCount = 200;
     
     for (let i = 0; i < starCount; i++) {
         stars.push({
