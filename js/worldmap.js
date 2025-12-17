@@ -99,10 +99,11 @@ async function worldmapRenderMap(allData) {
 
         mark: {
           type: "circle",
-          opacity: 0.85,
-          stroke: "#50E3C2",
-          strokeWidth: 1.2,
-          strokeOpacity: 0.8
+          opacity: 0.95,
+          stroke: "#a1a1a1ff",
+          strokeWidth: 0.5,
+          strokeOpacity: 0.8,
+          strokeOpacity: 0.6
         },
 
         encoding: {
